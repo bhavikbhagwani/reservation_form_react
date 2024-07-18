@@ -1,6 +1,7 @@
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import styles from './ResForm.module.css'
 import { useState } from 'react'
+import emailjs from '@emailjs/browser'
 
 const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
 
@@ -37,7 +38,8 @@ const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
         emailErrorMessage = "Email is empty. Please enter an email";
       } else if (emailValue.length > 50) {
         emailErrorMessage = "Email is too long";
-      }
+      } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailValue))
+        emailErrorMessage = "Email is not valid. Try again"
 
       
       setEmailError(emailErrorMessage);
@@ -77,6 +79,27 @@ const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
       setnumPeopleError(numPeopleErrorMessage);
 
     }
+
+    const getTodayDate = () => {
+      const today = new Date();
+      const yyyy = today.getFullYear()
+      const mm = String(today.getMonth() + 1).padStart(2, '0')
+      const dd = String(today.getDate()).padStart(2, '0')
+
+      return `${yyyy}-${mm}-${dd}`
+    }
+
+    const checkDate = (dateValue) => {
+      const selectedDate = new Date(dateValue)
+      const today = new Date()
+      today.setDate(today.getDate() + 1)
+      today.setHours(0,0,0,0)
+
+      if (selectedDate <= today){
+        return true
+      }
+      return false
+    }
   
     const updateDate = (event) => {
       const dateValue = event.target.value
@@ -86,7 +109,10 @@ const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
 
       if (dateValue === ""){
         dateErrorMessage = "Date is empty or not complete. Please enter a valid date of reservation"
+      } else if (checkDate(dateValue)){
+        dateErrorMessage = "Date is not valid. Try a later date than today"
       }
+      
 
       setDateError(dateErrorMessage)
 
@@ -101,6 +127,14 @@ const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
 
       if (timeValue === ""){
         timeErrorMessage = "Time is empty or not complete. Please enter a valid time of reservation"
+      } else {
+        const [hours, minutes] = timeValue.split(":").map(Number);
+        
+        if (hours < 11 || (hours === 11 && minutes < 0)) {
+          timeErrorMessage = "Time cannot be earlier than 11:00. Please enter a valid time of reservation";
+        } else if (hours > 23 || (hours === 23 && minutes > 0)) {
+          timeErrorMessage = "Time cannot be later than 22:00. Please enter a valid time of reservation";
+        }
       }
 
       setTimeError(timeErrorMessage)
@@ -129,6 +163,14 @@ const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
       return true
     }
 
+    const sendEmailToMyself = (event) => {
+        emailjs.sendForm('service_r9dmcyl', 'template_uy6yawe', event.target, 'Xu9C-u3lLfyexah2C')
+    }
+
+    const sendEmailToUser = (event) => {
+        emailjs.sendForm('service_r9dmcyl','template_oluap5d',event.target,'Xu9C-u3lLfyexah2C')
+    }
+
 
 
 
@@ -140,34 +182,19 @@ const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
       if (checkAllValuesFilled()){
         
         onOpen()
-        console.log("Form Submitted!")
-        console.log(name)
-        console.log(email)
-        console.log(phone)
-        console.log(numberOfPeople)
-        console.log(date)
-        console.log(time)
-        console.log(place)
-        console.log(comm)
         setFinalError("")
+
+
+        sendEmailToMyself(event)
+        sendEmailToUser(event)
+
       }else{
         setFinalError("Some values have not been entered. Please fill in the reservation form and try again ")
       }
 
     }
   
-    
-
-    const generateRandomValues = () => {
-      setName("bhavik");
-      setEmail("bhavik@email.com");
-      setPhone("123456");
-      setNumberOfPeople("5")
-      setDate("2024-07-20");
-      setTime("20:26");
-      setPlace("any");
-      setComments("");
-    }
+  
 
   return (
     <div className={styles.box}>
@@ -178,54 +205,54 @@ const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
         <form onSubmit={handleSubmit}>
           <div className={styles.input_group}>
             <label className={styles.label}>Name:</label>
-            <input onChange={updateName}  type="text" autoComplete='off' name='Name' id='Name'className={styles.input} value={name} placeholder='Enter name'/>
+            <input onChange={updateName}  type="text" autoComplete='off' name='name_from' id='nameFrom'className={styles.input} value={name} placeholder='Enter name'/>
             <ErrorMessage errorContents={nameError} errorType='normal'></ErrorMessage>
             
           </div>
           <div className={styles.input_group}>
             <label className={styles.label}>Email: </label>
-            <input onChange={updateEmail} type="text" autoComplete='off' name='Email' id='Email'className={styles.input} value={email} placeholder='Enter email'/>
+            <input onChange={updateEmail} type="text" autoComplete='off' name='email_from' id='emailFrom'className={styles.input} value={email} placeholder='Enter email'/>
             <ErrorMessage errorContents={emailError} errorType='normal'></ErrorMessage>
           </div>
           <div className={styles.input_group}>
             <label className={styles.label}>Phone Number (including country): </label>
-            <input onChange={updatePhoneNumber} autoComplete='off' name='Phone Number' id='Phone Number'className={styles.input} value={phone} placeholder='Enter phone number'/>
+            <input onChange={updatePhoneNumber} autoComplete='off' name='phone_from' id='phoneFrom'className={styles.input} value={phone} placeholder='Enter phone number'/>
             <ErrorMessage errorContents={phoneNumberError} errorType='normal'></ErrorMessage>
           </div>
           <div className={styles.input_group}>
             <label className={styles.label}>How many people: </label>
-            <input type='number' onChange={updateNumberOfPeople} autoComplete='off' name='Phone Number' id='Phone Number'className={styles.input} value={numberOfPeople}/>
+            <input type='number' onChange={updateNumberOfPeople} autoComplete='off' name='num_people_from' id='numPeopleFrom'className={styles.input} value={numberOfPeople}/>
             <ErrorMessage errorContents={numPeopleError} errorType='normal'></ErrorMessage>
           </div>
           <div className={styles.input_group}>
               <label className={styles.label}>Select Date: </label>
-              <input onChange={updateDate} type="date" name='Date' id='Date' className={styles.input} value={date} />
+              <input onChange={updateDate} type="date" name='date_from' id='Date' className={styles.input} value={date} />
               <ErrorMessage errorContents={dateError} errorType='normal'></ErrorMessage>
           </div>
           <div className={styles.input_group}>
             <label className={styles.label}>Time of Reservation:</label>
-            <input onChange={updateTime} type='time'  name='Time' id='Time'className={styles.input} min="13:00" max="22:00" value={time}/>
+            <input onChange={updateTime} type='time'  name='time_from' id='Time'className={styles.input} value={time}/>
             <ErrorMessage errorContents={timeError} errorType='normal'></ErrorMessage>
           </div>
           <div className={styles.input_group}>
             <label className={styles.label}>Select place of sitting: </label>
             <div className={styles.radioButtonsContainer}>
               <div className={styles.radioButton}>
-                <input checked={place==="inside"} onChange={() => updatePlace("inside")} name='radio-group' id='radio2' className={styles.radioButtonInput} type='radio' />
+                <input checked={place==="inside"} onChange={() => updatePlace("inside")} name='place_from' id='radio2' className={styles.radioButtonInput} type='radio' />
                 <label htmlFor="radio2" className={styles.radioButtonLabel}>
                   <span className={styles.radioButtonCustom}></span>
                   Inside
                 </label>
               </div>
               <div className={styles.radioButton}>
-                <input checked={place==="outside"} onChange={() => updatePlace("outside")} name='radio-group' id='radio3' className={styles.radioButtonInput} type='radio' />
+                <input checked={place==="outside"} onChange={() => updatePlace("outside")} name='place_from' id='radio3' className={styles.radioButtonInput} type='radio' />
                 <label htmlFor="radio3" className={styles.radioButtonLabel}>
                   <span className={styles.radioButtonCustom}></span>
                   Outisde
                 </label>
               </div>
               <div className={styles.radioButton}>
-                <input checked={place==="any"} onChange={() => updatePlace("any")} name='radio-group' id='radio1' className={styles.radioButtonInput} type='radio' />
+                <input checked={place==="any"} onChange={() => updatePlace("any")} name='place_from' id='radio1' className={styles.radioButtonInput} type='radio' />
                 <label htmlFor="radio1" className={styles.radioButtonLabel}>
                   <span className={styles.radioButtonCustom}></span>
                   Any

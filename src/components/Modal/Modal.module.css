@@ -81,6 +81,6 @@
 }
 
 
-.modal_btns button:active{
-
+.modal_btns button:hover{
+    background: rgb(105, 105, 105);
 }

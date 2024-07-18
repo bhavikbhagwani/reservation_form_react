@@ -41,7 +41,6 @@ const Modal = ({showModal, onClose, values, resetResevForm}) => {
                 <h4>Email of the reserver: {email}</h4>
                 <h4>Phone number of the reserver: {phone}</h4>
                 <h4>Number of People for Reservation: {numberOfPeople}</h4>
-                <h4>Phone number of the reserver: {phone}</h4>
                 <h4>Date of reservation: {date}</h4>
                 <h4>Time of reservation: {time}</h4>
                 <h4>Place of sitting: {place}</h4>
