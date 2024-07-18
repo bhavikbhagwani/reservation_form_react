@@ -1,4 +1,4 @@
-import ErrorMessage from './ErrorMessage/ErrorMessage'
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import styles from './ResForm.module.css'
 
 
