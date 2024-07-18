@@ -1,12 +1,13 @@
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import styles from './ResForm.module.css'
+import { useState } from 'react'
 
-
-const ResForm = ({values, valueSetters}) => {
+const ResForm = ({values, valueSetters, onOpen}) => {
 
     const {name, email, phone, numberOfPeople, date, time, place, comm, nameError, emailError, phoneNumberError, numPeopleError, dateError, timeError, placeError, finalError} = values
     const {setName, setEmail, setPhone, setNumberOfPeople, setDate, setTime, setPlace, setComments, setNameError, setEmailError, setphoneNumberError, setnumPeopleError, setDateError, setTimeError, setPlaceError, setFinalError} = valueSetters
 
+    
 
 
     const updateName = (event) => {
@@ -137,8 +138,8 @@ const ResForm = ({values, valueSetters}) => {
       
 
       if (checkAllValuesFilled()){
- 
-
+        
+        onOpen()
         console.log("Form Submitted!")
         console.log(name)
         console.log(email)
@@ -166,6 +167,17 @@ const ResForm = ({values, valueSetters}) => {
       setPlace("any");
       setComments("");
   
+    }
+
+    const generateRandomValues = () => {
+      setName("bhavik");
+      setEmail("bhavik@email.com");
+      setPhone("123456");
+      setNumberOfPeople("5")
+      setDate("2024-07-20");
+      setTime("20:26");
+      setPlace("any");
+      setComments("");
     }
 
   return (
@@ -242,6 +254,7 @@ const ResForm = ({values, valueSetters}) => {
           <div className={styles.btn_container}>
             <button className={styles.btn} type='button' onClick={resetResevForm}>Reset</button>
             <button className={styles.btn} type='submit'>Reserve</button>
+            <button type='button' onClick={generateRandomValues}>Random</button>
           </div>
           <ErrorMessage errorContents={finalError} errorType="final" />
 

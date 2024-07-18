@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import ResForm from './components/ResForm/ResForm'
+import Modal from './components/Modal/Modal'
 
 function App() {
 
@@ -22,19 +23,30 @@ function App() {
   const [placeError, setPlaceError] = useState("")
 
   const [finalError, setFinalError] = useState("")
-  
-
 
   const values = {name, email, phone, numberOfPeople, date, time, place, comm, nameError, emailError, phoneNumberError, numPeopleError, dateError, timeError, placeError, finalError}
   const valueSetters = {setName, setEmail, setPhone, setNumberOfPeople, setDate, setTime, setPlace, setComments, setNameError, setEmailError, setphoneNumberError, setnumPeopleError, setDateError, setTimeError, setPlaceError, setFinalError }
 
+  const [showModal, setShowModal] = useState(false)
 
+  const onOpen = () => {
+    setShowModal(true)
+  }
+
+  const onClose = () => {
+    setShowModal(false)
+  }
 
   return (
     <>
     <div className='full_container'>
-      <ResForm values={values} valueSetters = {valueSetters}></ResForm>
+      <ResForm values={values} valueSetters = {valueSetters} onOpen = {onOpen}></ResForm>
     </div>
+    <Modal
+    showModal={showModal} 
+    onClose = {onClose}
+    values={values}
+    ></Modal>
     </>
   )
 }
