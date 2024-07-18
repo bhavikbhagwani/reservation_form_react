@@ -2,7 +2,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import styles from './ResForm.module.css'
 import { useState } from 'react'
 
-const ResForm = ({values, valueSetters, onOpen}) => {
+const ResForm = ({values, valueSetters, onOpen, resetResevForm}) => {
 
     const {name, email, phone, numberOfPeople, date, time, place, comm, nameError, emailError, phoneNumberError, numPeopleError, dateError, timeError, placeError, finalError} = values
     const {setName, setEmail, setPhone, setNumberOfPeople, setDate, setTime, setPlace, setComments, setNameError, setEmailError, setphoneNumberError, setnumPeopleError, setDateError, setTimeError, setPlaceError, setFinalError} = valueSetters
@@ -156,18 +156,7 @@ const ResForm = ({values, valueSetters, onOpen}) => {
 
     }
   
-    const resetResevForm = () => {
-  
-      setName("");
-      setEmail("");
-      setPhone("");
-      setNumberOfPeople("")
-      setDate("");
-      setTime("");
-      setPlace("any");
-      setComments("");
-  
-    }
+    
 
     const generateRandomValues = () => {
       setName("bhavik");
@@ -254,7 +243,6 @@ const ResForm = ({values, valueSetters, onOpen}) => {
           <div className={styles.btn_container}>
             <button className={styles.btn} type='button' onClick={resetResevForm}>Reset</button>
             <button className={styles.btn} type='submit'>Reserve</button>
-            <button type='button' onClick={generateRandomValues}>Random</button>
           </div>
           <ErrorMessage errorContents={finalError} errorType="final" />
 

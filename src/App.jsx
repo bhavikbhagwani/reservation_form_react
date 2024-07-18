@@ -37,15 +37,30 @@ function App() {
     setShowModal(false)
   }
 
+  const resetResevForm = () => {
+  
+    setName("");
+    setEmail("");
+    setPhone("");
+    setNumberOfPeople("")
+    setDate("");
+    setTime("");
+    setPlace("any");
+    setComments("");
+
+  }
+
   return (
     <>
     <div className='full_container'>
-      <ResForm values={values} valueSetters = {valueSetters} onOpen = {onOpen}></ResForm>
+      <ResForm values={values} valueSetters = {valueSetters} onOpen = {onOpen} resetResevForm = {resetResevForm}></ResForm>
     </div>
     <Modal
     showModal={showModal} 
     onClose = {onClose}
     values={values}
+    resetResevForm = {resetResevForm}
+
     ></Modal>
     </>
   )
